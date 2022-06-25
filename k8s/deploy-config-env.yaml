@@ -1,0 +1,64 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tnb-env-config
+  namespace: default
+data:
+  TZ: "America/Sao_Paulo"
+  PYTHONUNBUFFERED: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONIOENCODING: "UTF-8"
+  TNB_NOTICIA_LOTE: "500"
+  # TNB_BD_HOST: "nspro44.hostgator.com.br"
+  # TNB_BD_PORT: "3306"
+  # TNB_BD_NAME: "tamonabo_BDCMSTamoNaBolsa"
+  # TNB_BD_USER: "tamonabo_rootcms"
+  # TNB_BD_PASS: "Chrs8723"
+  #TNB_BD_HOST: "68.183.117.205"
+  TNB_BD_HOST: "137.184.88.130"
+  TNB_BD_PORT: "3306"
+  TNB_BD_NAME: "tamonabo_BDCMSTamoNaBolsa"
+  TNB_BD_USER: "root"
+  TNB_BD_PASS: "#Chrs2387"
+  TNB_MAIL_HOST: "mail.tamonabolsa.com.br"
+  TNB_MAIL_PORT: "587"
+  TNB_MAIL_USER: "suporte@tamonabolsa.com.br"
+  TNB_MAIL_PASS: "#Chrs8723"
+  TNB_MAIL_HOST_GMAIL: "smtp.gmail.com"
+  TNB_MAIL_PORT_GMAIL: "587"
+  TNB_MAIL_USER_GMAIL: "chris.mar.silva@gmail.com"
+  TNB_MAIL_PASS_GMAIL: "#Chrs23870"
+  # TNB_MAIL_HOST_OUTLOOK: "smtp-mail.outlook.com"
+  TNB_MAIL_HOST_OUTLOOK: "smtp.office365.com"
+  TNB_MAIL_PORT_OUTLOOK: "587"
+  TNB_MAIL_USER_OUTLOOK: "tamonabolsa.suporte@outlook.com"
+  TNB_MAIL_PASS_OUTLOOK: "#Chrs8723"
+  TNB_BOT_TOKEN: "1238835452:AAGTATI9bldZfHtD2iMrvHiVztz9DguLHck"
+  TNB_BOT_TOKEN_PORTF: "1330607781:AAH9aipmyrjNYJxNdIiDu_7el0vmHH5nbTI"
+  TNB_BOT_TOKEN_PROV: "1150007959:AAE-CldxtrZN4UTAvpQrJh0xhhjpJqrxFnw"
+  TNB_BOT_TOKEN_FATO: "1076825550:AAED45DDaG1zxT9_OnM8OAsmRlkmo1iGDE8"
+  TNB_BOT_TOKEN_NOTIC: "1264783599:AAGtoA0FCQDqqB8WNhQ-5qYfbk-KT6JqeRw"
+  TNB_BOT_TOKEN_YOUTUBE: "1324188175:AAHf4sf4QJj8LR6qVh_elIwLK_v7SpZek_o"
+  TNB_MQ_HOST: "wrk-rabbit"
+  TNB_MQ_PORT: "5672"
+  TNB_MQ_USER: "guest"
+  TNB_MQ_PASS: "guest"
+  TNB_MQ_FL_ALRT_MONTA: "tnb.alrt.monta"
+  TNB_MQ_FL_ALRT_ENVIA: "tnb.alrt.envia"
+  TNB_MQ_FL_ALRT_ERRO: "tnb.alrt.erro"
+  RABBITMQ_DEFAULT_USER: "guest"
+  RABBITMQ_DEFAULT_PASS: "guest"
+  RABBITMQ_ERLANG_COOKIE: "sdfgdsgdfgdfg"
+  # MONGO_URI: "mongodb://root:example@localhost:27017/test-database-py-flask?authSource=admin&maxPoolSize=20&retryWrites=true&w=majority"  # Docker
+  # MONGO_URI: "mongodb://cms:#Chrs2387@localhost:27017/tamonabolsa?authSource=admin&maxPoolSize=20&retryWrites=true&w=majority"  # DigitalOcean with localhost
+  MONGO_URI: "mongodb://cms:#Chrs2387@137.184.88.130:27017/?authSource=admin&maxPoolSize=20&retryWrites=true&w=majority"  # DigitalOcean with IpServer
+---
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: tnb-env-secret
+#   namespace: default
+# data:
+#   VAR: VkFMVUU=  # base64 of "VALUE"
+# ---

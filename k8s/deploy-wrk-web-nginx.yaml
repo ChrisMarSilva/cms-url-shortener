@@ -1,0 +1,42 @@
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: wrk-web-nginx
+#   namespace: default
+#   labels:
+#     tier: backend
+# spec:
+#   selector:
+#     app: wrk-web-nginx
+#     tier: backend
+#   ports:
+#   - protocol: TCP
+#     port: 80
+#   # externalIPs:
+#   # - 104.131.178.68
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name:  wrk-web-nginx
+#   labels:
+#     tier: backend
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app:  wrk-web-nginx
+#       tier: backend
+#   template:
+#     metadata:
+#       labels:
+#         app:  wrk-web-nginx
+#         tier: backend
+#     spec:
+#       containers:
+#       - name: wrk-web-nginx
+#         image: chrismarsilva/cms-tnb-web-nginx:latest
+#         ports:
+#         - containerPort: 80
+# ---

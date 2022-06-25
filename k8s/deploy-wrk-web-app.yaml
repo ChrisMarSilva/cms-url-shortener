@@ -1,0 +1,44 @@
+# ---
+# # apiVersion: v1
+# # kind: Service
+# # metadata:
+# #   name: wrk-web-app
+# #   namespace: default
+# #   labels:
+# #     tier: backend
+# # spec:
+# #   type: LoadBalancer
+# #   selector:
+# #     app: wrk-web-app
+# #     tier: backend
+# #   ports:
+# #     - protocol: TCP
+# #       port: 5000
+# #       targetPort: 5000
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: wrk-web-app
+#   namespace: default
+#   labels:
+#     tier: backend
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: wrk-web-app
+#       tier: backend
+#   template:
+#     metadata:
+#       labels:
+#         app: wrk-web-app
+#         tier: backend
+#     spec:
+#       containers:
+#       - name: wrk-web-app
+#         image: chrismarsilva/cms-tnb-web-app:latest
+#         #imagePullPolicy: Always
+#         #ports:
+#         #- containerPort: 5000
+# ---

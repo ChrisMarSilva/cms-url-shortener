@@ -1,0 +1,130 @@
+version: "3"
+
+networks: 
+  net-api:
+    driver: bridge
+  net-broker:
+    driver: bridge
+  net-banco:
+    driver: bridge
+
+services:
+
+  wrk-api:
+    # image: "wrk-api:latest"
+    container_name: wrk-api
+    build: api
+      # context: .
+      # dockerfile: ./api/Dockerfile
+    restart: always  # on-failure:3
+    ports:
+      - "3000:3000"
+    depends_on:
+      - "worker-redis"
+    # env_file: .env
+    networks:
+      - net-api
+      - net-banco
+      - net-broker
+
+  # wrk-nginx:
+  #   image: "cms-nginx:latest"
+  #   container_name: wrk-nginx
+  #   build: "./nginx"
+  #   restart: always
+  #   ports:
+  #     - "81:80"
+  #     - "443:443"
+  #   environment:
+  #     - NGINX_PORT=80
+  #   depends_on:
+  #     - "wrk-api"
+  #   networks:
+  #     - net-api
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+
+  worker-redis:
+    container_name: worker-redis
+    hostname: redis
+    image: redis:latest  # redis:alpine
+    restart: always
+    ports:
+      - 6379:6379
+    command: redis-server --requirepass 123 --appendonly yes
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    volumes:
+      - ./redis/data/:/data
+    networks:
+      - net-banco
+
+  # worker-redis-commander:
+  #   container_name: redis-ui
+  #   image: rediscommander/redis-commander:latest
+  #   restart: always
+  #   environment:
+  #     - REDIS_HOSTS=local:localhost:6379
+  #     - REDIS_PASSWORD=123
+  #     - HTTP_USER=admin
+  #     - HTTP_PASSWORD=admin
+  #   ports:
+  #     - 8082:8081
+  #   depends_on:
+  #     - "worker-redis"
+  #   networks:
+  #     - net-banco
+
+  # worker-mongo:
+  #   image: mongo
+  #   restart: always
+  #   environment:
+  #     MONGO_INITDB_DATABASE: admin
+  #     MONGO_INITDB_ROOT_USERNAME: root
+  #     MONGO_INITDB_ROOT_PASSWORD: example
+  #   networks:
+  #     - net-banco
+  #   ports:
+  #     - 27017:27017
+  #   volumes:
+  #     - ./mongodb/data:/data/db
+
+  # worker-mongo-express:
+  #   image: mongo-express
+  #   restart: always
+  #   ports:
+  #     - 8081:8081
+  #   environment:
+  #     ME_CONFIG_MONGODB_ADMINUSERNAME: root
+  #     ME_CONFIG_MONGODB_ADMINPASSWORD: example
+  #     ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+  #   networks:
+  #     - net-banco
+    # depends_on:
+    #   - "worker-mongo"
+
+  # worker-rabbitmq:
+  #   hostname: "worker-rabbitmq"
+  #   image: rabbitmq:3-management
+  #   container_name: worker-rabbitmq
+  #   command: rabbitmq-server
+  #   restart: always
+  #   healthcheck:
+  #     test: [ "CMD", "nc", "-z", "localhost", "15672" ]
+  #     interval: 3s
+  #     timeout: 10s
+  #     retries: 3
+  #   ports:
+  #     - "15672:15672"
+  #     - "5672:5672"
+  #   environment:
+  #     - RABBITMQ_DEFAULT_USER=guest
+  #     - RABBITMQ_DEFAULT_PASS=guest
+  #     - RABBITMQ_ERLANG_COOKIE='sdfgdsgdfgdfg'
+  #     - CLUSTERED=true
+  #   networks:
+  #     - net-broker
+  #   volumes:
+  #     - ./rabbitmq/data/:/var/lib/rabbitmq/
+  #   labels:
+  #     NAME: "rabbitmq1"
