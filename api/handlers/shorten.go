@@ -81,6 +81,10 @@ func (handler *ShortenHandler) ShortenURL(c *fiber.Ctx) error {
 
 	body.URL = helpers.EnforceHTTP(body.URL)
 
+	if body.Expiry == 0 {
+		body.Expiry = 24
+	}
+
 	// var id string
 	id := body.CustomShort
 
@@ -94,17 +98,12 @@ func (handler *ShortenHandler) ShortenURL(c *fiber.Ctx) error {
 	defer r.Close()
 
 	val, _ = r.Get(databases.Ctx, id).Result()
-	if val != "" {
-		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": "URL custom short is already in use"})
-	}
-
-	if body.Expiry == 0 {
-		body.Expiry = 24
-	}
-
-	err = r.Set(databases.Ctx, id, body.URL, body.Expiry*3600*time.Second).Err()
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Unable to connext to server"})
+	if val == "" {
+		// return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": "URL custom short is already in use"})
+		err = r.Set(databases.Ctx, id, body.URL, body.Expiry*3600*time.Second).Err()
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Unable to connext to server"})
+		}
 	}
 
 	resp := entities.Response{
