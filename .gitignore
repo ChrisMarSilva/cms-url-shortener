@@ -742,4 +742,4 @@ venv.bak/
 ./redis
 /redis
 redis
-
+redis/*
