@@ -10,7 +10,8 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/encryptcookie"
-	"github.com/gofiber/fiber/v2/middleware/logger"
+
+	// "github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/timeout"
 )
@@ -36,16 +37,16 @@ func NewRoutes() *fiber.App {
 
 	app.Use(encryptcookie.New(encryptcookie.Config{Key: "7tDyMRLm2ii3BVDiN7GXfKoALsiMMzrr"}))
 
-	//app.Use(logger.New())
-	app.Use(logger.New(logger.Config{Format: "[${time}]: ${ip} ${status} ${latency} ${method} ${path} Error: ${error}\n"}))
+	// app.Use(logger.New())
+	// app.Use(logger.New(logger.Config{Format: "[${time}]: ${ip} ${status} ${latency} ${method} ${path} Error: ${error}\n"}))
 
 	app.Use(recover.New())
 
-	// app.Get("/:url", routes.ResolveURL)
-	app.Get("/:url", timeout.New(resolveHandler.ResolveURL, 5*time.Second))
+	// app.Get("/:url", resolveHandler.ResolveURL)
+	app.Get("/:url", timeout.New(resolveHandler.ResolveURL, 10*time.Second))
 
-	// app.Post("/api/v1", routes.ShortenURL)
-	app.Post("/api/v1", timeout.New(shortenHandler.ShortenURL, 5*time.Second))
+	app.Post("/api/v1", shortenHandler.ShortenURL)
+	// app.Post("/api/v1", timeout.New(shortenHandler.ShortenURL, 10*time.Second))
 
 	// app.Get("/api/v1/dashboard", monitor.New())
 

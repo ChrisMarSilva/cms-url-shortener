@@ -3,6 +3,8 @@ docker-compose down
 docker-compose up -d --build
 docker-compose up -d
 
+docker pull rabbitmq:latest
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -37,22 +39,21 @@ Gerador de hash
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 
-Servidor            - NGINX                         - Docker/Kubernetes
-Load Balance        - NGINX                         - Docker/Kubernetes
-Site                - VueJS                         - Docker/Kubernetes
-APM                 - New Relic ou Jaeger           - Docker/Kubernetes -  Application Performance Monitoring
-Secret Manager      - Vault                         - Docker/Kubernetes
-WebService Core API - Golang                        - Docker/Kubernetes
-WebService Core API - Golang                        - Docker/Kubernetes
-WebService Core API - Golang                        - Docker/Kubernetes
-Service Espurgo     - Golang                        - Docker/Kubernetes
-Cache               - Redis/MenCache/ElasticCache   - Docker/Kubernetes
-Mensageria          - RabbitMQ                      - Docker/Kubernetes
-Banco de Dados      - MongoDB - Escritura - Master  - Docker/Kubernetes
-Banco de Dados      - MongoDB - Leitura   - Replica - Docker/Kubernetes
-Broker              - RabbitMQ                      - Docker/Kubernetes
-Metrics Service     - Prometheus                    - Docker/Kubernetes
-Metrics Service     - Grafana                       - Docker/Kubernetes
+    Servidor            - NGINX                         - Docker/Kubernetes
+    Load Balance        - NGINX                         - Docker/Kubernetes
+    Site                - VueJS                         - Docker/Kubernetes
+    APM                 - New Relic ou Jaeger           - Docker/Kubernetes -  Application Performance Monitoring
+    Secret Manager      - Vault                         - Docker/Kubernetes
+OK  WebService Core API - Golang                        - Docker/Kubernetes     
+OK  Worker Consumer     - Golang                        - Docker/Kubernetes     
+OK  Service Espurgo     - Golang                        - Docker/Kubernetes
+OK  Cache               - Redis/MenCache/ElasticCache   - Docker/Kubernetes
+OK  Mensageria          - RabbitMQ                      - Docker/Kubernetes
+    Banco de Dados      - MongoDB - Escritura - Master  - Docker/Kubernetes
+    Banco de Dados      - MongoDB - Leitura   - Replica - Docker/Kubernetes
+    Broker              - RabbitMQ                      - Docker/Kubernetes
+    Metrics Service     - Prometheus                    - Docker/Kubernetes
+    Metrics Service     - Grafana                       - Docker/Kubernetes
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------

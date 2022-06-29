@@ -738,8 +738,13 @@ venv.bak/
 
 #---------------------------
 
+/rabbitmq
+rabbitmq/*
 
-./redis
+/mongodb
+mongodb/*
+
 /redis
-redis
 redis/*
+
+#---------------------------

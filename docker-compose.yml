@@ -45,7 +45,7 @@ services:
   #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
 
   worker-redis:
-    # container_name: worker-redis
+    container_name: worker-redis
     # hostname: redis
     image: redis:latest  # redis:alpine
     restart: always
@@ -103,28 +103,28 @@ services:
     # depends_on:
     #   - "worker-mongo"
 
-  # worker-rabbitmq:
-  #   hostname: "worker-rabbitmq"
-  #   image: rabbitmq:3-management
-  #   container_name: worker-rabbitmq
-  #   command: rabbitmq-server
-  #   restart: always
-  #   healthcheck:
-  #     test: [ "CMD", "nc", "-z", "localhost", "15672" ]
-  #     interval: 3s
-  #     timeout: 10s
-  #     retries: 3
-  #   ports:
-  #     - "15672:15672"
-  #     - "5672:5672"
-  #   environment:
-  #     - RABBITMQ_DEFAULT_USER=guest
-  #     - RABBITMQ_DEFAULT_PASS=guest
-  #     - RABBITMQ_ERLANG_COOKIE='sdfgdsgdfgdfg'
-  #     - CLUSTERED=true
-  #   networks:
-  #     - net-broker
-  #   volumes:
-  #     - ./rabbitmq/data/:/var/lib/rabbitmq/
-  #   labels:
-  #     NAME: "rabbitmq1"
+  worker-rabbitmq:
+    # hostname: "rabbitmq"
+    container_name: worker-rabbitmq
+    image: rabbitmq:3-management
+    command: rabbitmq-server
+    restart: always
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "15672" ]
+      interval: 3s
+      timeout: 10s
+      retries: 3
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_ERLANG_COOKIE='sdfgdsgdfgdfg'
+      - CLUSTERED=true
+    networks:
+      - net-broker
+    volumes:
+      - ./rabbitmq/data/:/var/lib/rabbitmq/
+    labels:
+      NAME: "rabbitmq1"

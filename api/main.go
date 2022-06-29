@@ -16,6 +16,7 @@ import (
 // go get -u github.com/asaskevich/govalidator
 // go get -u github.com/go-redis/redis/v8
 // go get -u github.com/google/uuid
+// go get -u github.com/streadway/amqp
 // go mod tidy
 
 // http://localhost:3000/efa14d  // erro
