@@ -1,6 +1,9 @@
 package helpers
 
 import (
+	"crypto/md5"
+	"encoding/hex"
+	"fmt"
 	"os"
 	"strings"
 )
@@ -36,4 +39,37 @@ func RemoveDomainError(url string) (retorno bool) {
 	}
 
 	return
+}
+
+func GetMD5Hash(text string) string {
+	hash := md5.Sum([]byte(text))
+	return hex.EncodeToString(hash[:])
+}
+
+func GetMD5Hash2(text string) string {
+	hasher := md5.New()
+	hasher.Write([]byte(text))
+	return hex.EncodeToString(hasher.Sum(nil))
+}
+
+func GetMD5Hash3(text string) string {
+	hasher := md5.New()
+	hasher.Write([]byte(text))
+	return hex.EncodeToString(hasher.Sum(nil))
+}
+
+func GetMD5Hash4(text string) string {
+	data := []byte(text)
+	return fmt.Sprintf("%x", md5.Sum(data))
+}
+
+func GetMD5Hash5(text string) string {
+	hasher := md5.New()
+	return hex.EncodeToString(hasher.Sum([]byte(text)))
+}
+
+func GetMD5Hash6(text string) []byte {
+	hasher := md5.New()
+	hasher.Write([]byte(text))
+	return hasher.Sum(nil)
 }

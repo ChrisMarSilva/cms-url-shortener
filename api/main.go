@@ -18,6 +18,9 @@ import (
 // go get -u github.com/google/uuid
 // go mod tidy
 
+// http://localhost:3000/efa14d  // erro
+// http://127.0.0.1:3000/efa14d  // ok
+
 // go run main.go
 
 func main() {

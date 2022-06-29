@@ -31,6 +31,8 @@ func (handler *ShortenHandler) ShortenURL(c *fiber.Ctx) error {
 	// return handler.service.ShortenURL(body)
 
 	if err := c.BodyParser(&body); err != nil {
+		// log.Println(string(c.Body()))
+		// log.Println("c.BodyParser", err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "cannot parse JSON"}) // err.Error()
 	}
 
@@ -43,25 +45,35 @@ func (handler *ShortenHandler) ShortenURL(c *fiber.Ctx) error {
 
 	val, err := r2.Get(databases.Ctx, my_ip).Result()
 	if err == redis.Nil {
-		_ = r2.Set(databases.Ctx, my_ip, os.Getenv("API_QUOTA"), 30*60*time.Second).Err()
-	} else {
-		val, _ = r2.Get(databases.Ctx, my_ip).Result()
-		valInt, _ := strconv.Atoi(val)
-		if valInt <= 0 {
-			limit, _ := r2.TTL(databases.Ctx, my_ip).Result()
-			return c.Status(fiber.StatusServiceUnavailable).JSON(fiber.Map{"error": "Rate limit exceded", "rate_limit_rest": limit / time.Nanosecond / time.Minute})
-		}
+		val = os.Getenv("API_QUOTA")
+		_ = r2.Set(databases.Ctx, my_ip, val, 30*60*time.Second).Err()
+		// } else {
+		// 	val, _ = r2.Get(databases.Ctx, my_ip).Result()
+		// 	valInt, _ := strconv.Atoi(val)
+		// 	if valInt <= 0 {
+		// 		limit, _ := r2.TTL(databases.Ctx, my_ip).Result()
+		// 		return c.Status(fiber.StatusServiceUnavailable).JSON(fiber.Map{"error": "Rate limit exceded", "rate_limit_rest": limit / time.Nanosecond / time.Minute})
+		// 	}
+	}
+	valInt, _ := strconv.Atoi(val)
+	if valInt <= 0 {
+		limit, _ := r2.TTL(databases.Ctx, my_ip).Result()
+		return c.Status(fiber.StatusServiceUnavailable).JSON(fiber.Map{"error": "Rate limit exceded", "rate_limit_rest": limit / time.Nanosecond / time.Minute})
 	}
 
 	// check if the input if an actual URL
 
 	if !govalidator.IsURL(body.URL) {
+		// log.Println("IsURL.body.URL", body.URL)
+		// log.Println(err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid URL"})
 	}
 
 	// check for domain error
 
 	if !helpers.RemoveDomainError(body.URL) {
+		// log.Println("RemoveDomainError.body.URL", body.URL)
+		// log.Println(err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "you can't hack the system (:"})
 	}
 

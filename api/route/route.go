@@ -34,7 +34,7 @@ func NewRoutes() *fiber.App {
 	//app.Use(cors.New())
 	app.Use(cors.New(cors.Config{AllowOrigins: "*", AllowMethods: "*", AllowHeaders: "*", AllowCredentials: true}))
 
-	app.Use(encryptcookie.New(encryptcookie.Config{Key: "VWY5XBVap84Zpd0ckbT1reTl0NM6pz7R"}))
+	app.Use(encryptcookie.New(encryptcookie.Config{Key: "7tDyMRLm2ii3BVDiN7GXfKoALsiMMzrr"}))
 
 	//app.Use(logger.New())
 	app.Use(logger.New(logger.Config{Format: "[${time}]: ${ip} ${status} ${latency} ${method} ${path} Error: ${error}\n"}))
@@ -48,6 +48,7 @@ func NewRoutes() *fiber.App {
 	app.Post("/api/v1", timeout.New(shortenHandler.ShortenURL, 5*time.Second))
 
 	// app.Get("/api/v1/dashboard", monitor.New())
+
 	app.Use(defaultHandler.NotFound)
 
 	return app
