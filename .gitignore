@@ -741,4 +741,5 @@ venv.bak/
 
 ./redis
 /redis
+redis
 
