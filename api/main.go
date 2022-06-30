@@ -17,6 +17,11 @@ import (
 // go get -u github.com/go-redis/redis/v8
 // go get -u github.com/google/uuid
 // go get -u github.com/streadway/amqp
+// go get -u github.com/uber/jaeger-client-go
+// go get -u github.com/opentracing/opentracing-go
+// go get -u github.com/jaegertracing/jaeger-client-go
+// go get -u github.com/pkg/errors
+// go get -u github.com/aschenmaker/fiber-opentracing
 // go mod tidy
 
 // http://localhost:3000/efa14d  // erro
@@ -24,14 +29,20 @@ import (
 
 // go run main.go
 
-func main() {
-
+func init() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+}
 
+func main() {
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	log.Fatal("Error loading .env file")
+	// }
 	app := route.NewRoutes()
 	log.Fatal(app.Listen(os.Getenv("API_PORT")))
-
 }
+
+// go run main.go

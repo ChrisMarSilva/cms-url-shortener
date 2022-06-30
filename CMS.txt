@@ -1,6 +1,10 @@
 
 docker-compose down
 docker-compose up -d --build
+
+
+
+docker-compose down
 docker-compose up -d
 
  docker run -it --rm -d -p 8080:80 --name web nginx
@@ -44,8 +48,8 @@ Gerador de hash
 OK  Servidor            - NGINX                         - Docker/Kubernetes
 OK  Load Balance        - NGINX                         - Docker/Kubernetes
     Site                - VueJS                         - Docker/Kubernetes
-    APM                 - New Relic ou Jaeger           - Docker/Kubernetes -  Application Performance Monitoring
     Secret Manager      - Vault                         - Docker/Kubernetes
+OK  APM                 - New Relic ou Jaeger           - Docker/Kubernetes -  Application Performance Monitoring
 OK  WebService Core API - Golang                        - Docker/Kubernetes     
 OK  Worker Consumer     - Golang                        - Docker/Kubernetes     
 OK  Service Espurgo     - Golang                        - Docker/Kubernetes
