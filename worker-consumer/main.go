@@ -25,24 +25,27 @@ func main() {
 
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatal("Error loading .env file", err)
 	}
+
+	// log.Println("amqp: ", os.Getenv("RABBIT_MQ_ADDR"))
+	// log.Println("queue: ", os.Getenv("RABBIT_MQ_QUEUE"))
 
 	conn, err := amqp.Dial(os.Getenv("RABBIT_MQ_ADDR"))
 	if err != nil {
-		log.Fatal("Failed to connect to RabbitMQ")
+		log.Fatal("Failed to connect to RabbitMQ", err)
 	}
 	defer conn.Close()
 
 	ch, err := conn.Channel()
 	if err != nil {
-		log.Fatal("Failed to open a channel")
+		log.Fatal("Failed to open a channel", err)
 	}
 	defer ch.Close()
 
 	messages, err := ch.Consume(os.Getenv("RABBIT_MQ_QUEUE"), "", true, false, false, false, nil)
 	if err != nil {
-		log.Println(err)
+		log.Println("ch.Consume", err)
 	}
 
 	forever := make(chan bool)
@@ -53,6 +56,7 @@ func main() {
 		defer r.Close()
 
 		for message := range messages {
+
 			log.Printf(" > Received message: %s\n", message.Body)
 
 			// pegar a url, ip, id

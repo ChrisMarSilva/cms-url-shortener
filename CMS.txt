@@ -3,7 +3,9 @@ docker-compose down
 docker-compose up -d --build
 docker-compose up -d
 
-docker pull rabbitmq:latest
+ docker run -it --rm -d -p 8080:80 --name web nginx
+ http://localhost:8080  
+
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -39,8 +41,8 @@ Gerador de hash
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 
-    Servidor            - NGINX                         - Docker/Kubernetes
-    Load Balance        - NGINX                         - Docker/Kubernetes
+OK  Servidor            - NGINX                         - Docker/Kubernetes
+OK  Load Balance        - NGINX                         - Docker/Kubernetes
     Site                - VueJS                         - Docker/Kubernetes
     APM                 - New Relic ou Jaeger           - Docker/Kubernetes -  Application Performance Monitoring
     Secret Manager      - Vault                         - Docker/Kubernetes

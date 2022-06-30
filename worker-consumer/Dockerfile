@@ -12,5 +12,4 @@ USER appuser
 COPY . /app
 COPY --from=builder /build/main /app/
 WORKDIR /app
-EXPOSE 3000
 CMD ["./main"] 

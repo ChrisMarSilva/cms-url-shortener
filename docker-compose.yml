@@ -10,102 +10,97 @@ networks:
 
 services:
 
-  # wrk-api:
-  #   # image: "wrk-api:latest"
-  #   container_name: wrk-api
-  #   build: api
-  #     # context: .
-  #     # dockerfile: ./api/Dockerfile
-  #   restart: always  # on-failure:3
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - "worker-redis"
-  #   # env_file: .env
-  #   networks:
-  #     - net-api
-  #     - net-banco
-  #     - net-broker
+  wrk-api:
+    hostname: wrk-api
+    container_name: wrk-api
+    build: api
+    restart: always
+    # ports:
+    #   - "3000:80"
+    depends_on:
+      - "wrk-redis"
+      - "wrk-rabbitmq"
+    links:
+      - "wrk-redis"
+      - "wrk-rabbitmq"
+    networks:
+      - net-api
+      - net-banco
+      - net-broker
 
-  # wrk-nginx:
-  #   image: "cms-nginx:latest"
-  #   container_name: wrk-nginx
-  #   build: "./nginx"
-  #   restart: always
-  #   ports:
-  #     - "81:80"
-  #     - "443:443"
-  #   environment:
-  #     - NGINX_PORT=80
-  #   depends_on:
-  #     - "wrk-api"
-  #   networks:
-  #     - net-api
-  #   volumes:
-  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+  wrk-api-02:
+    hostname: wrk-api-02
+    container_name: wrk-api-02
+    build: api
+    restart: always
+    # ports:
+    #   - "3000:80"
+    depends_on:
+      - "wrk-redis"
+      - "wrk-rabbitmq"
+    links:
+      - "wrk-redis"
+      - "wrk-rabbitmq"
+    networks:
+      - net-api
+      - net-banco
+      - net-broker
 
-  worker-redis:
-    container_name: worker-redis
-    # hostname: redis
-    image: redis:latest  # redis:alpine
+  wrk-api-03:
+    hostname: wrk-api-03
+    container_name: wrk-api-03
+    build: api
+    restart: always
+    # ports:
+    #   - "3000:80"
+    depends_on:
+      - "wrk-redis"
+      - "wrk-rabbitmq"
+    links:
+      - "wrk-redis"
+      - "wrk-rabbitmq"
+    networks:
+      - net-api
+      - net-banco
+      - net-broker
+
+  wrk-consumer:
+    container_name: wrk-consumer
+    build: "worker-consumer"
+    restart: always
+    depends_on:
+      - "wrk-redis"
+      - "wrk-rabbitmq"
+    links:
+      - "wrk-redis"
+      - "wrk-rabbitmq"
+    networks:
+      - net-api
+      - net-banco
+      - net-broker
+
+  wrk-nginx:
+    container_name: wrk-nginx
+    build: nginx
     restart: always
     ports:
-      - 6379:6379
-    command: redis-server --requirepass 123 --appendonly yes
-    environment:
-      - REDIS_REPLICATION_MODE=master
-    volumes:
-      - ./redis/data/:/data
-    # networks:
-    #   - net-banco
+      - "8080:80"
+      #- "443:443"
+    # environment:
+    #   - NGINX_HOST=foobar.com
+    #   - NGINX_PORT=80
+    depends_on:
+      - "wrk-api"
+    links:
+      - "wrk-api"
+    networks:
+      - net-api
+    # volumes:
+    #   - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
 
-  # worker-redis-commander:
-  #   container_name: redis-ui
-  #   image: rediscommander/redis-commander:latest
-  #   restart: always
-  #   environment:
-  #     - REDIS_HOSTS=local:localhost:6379
-  #     - REDIS_PASSWORD=123
-  #     - HTTP_USER=admin
-  #     - HTTP_PASSWORD=admin
-  #   ports:
-  #     - 8082:8081
-  #   depends_on:
-  #     - "worker-redis"
-  #   networks:
-  #     - net-banco
-
-  # worker-mongo:
-  #   image: mongo
-  #   restart: always
-  #   environment:
-  #     MONGO_INITDB_DATABASE: admin
-  #     MONGO_INITDB_ROOT_USERNAME: root
-  #     MONGO_INITDB_ROOT_PASSWORD: example
-  #   networks:
-  #     - net-banco
-  #   ports:
-  #     - 27017:27017
-  #   volumes:
-  #     - ./mongodb/data:/data/db
-
-  # worker-mongo-express:
-  #   image: mongo-express
-  #   restart: always
-  #   ports:
-  #     - 8081:8081
-  #   environment:
-  #     ME_CONFIG_MONGODB_ADMINUSERNAME: root
-  #     ME_CONFIG_MONGODB_ADMINPASSWORD: example
-  #     ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
-  #   networks:
-  #     - net-banco
-    # depends_on:
-    #   - "worker-mongo"
-
-  worker-rabbitmq:
-    # hostname: "rabbitmq"
-    container_name: worker-rabbitmq
+  wrk-rabbitmq:
+    container_name: wrk-rabbitmq
+    hostname: rabbitmq
     image: rabbitmq:3-management
     command: rabbitmq-server
     restart: always
@@ -128,3 +123,62 @@ services:
       - ./rabbitmq/data/:/var/lib/rabbitmq/
     labels:
       NAME: "rabbitmq1"
+
+  wrk-redis:
+    container_name: wrk-redis
+    hostname: redis
+    image: redis:latest
+    restart: always
+    ports:
+      - 6379:6379
+    command: redis-server --requirepass 123 --appendonly yes
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    volumes:
+      - ./redis/data/:/data
+    networks:
+      - net-banco
+
+  # wrk-redis-commander:
+  #   container_name: redis-ui
+  #   image: rediscommander/redis-commander:latest
+  #   restart: always
+  #   environment:
+  #     - REDIS_HOSTS=local:localhost:6379
+  #     - REDIS_PASSWORD=123
+  #     - HTTP_USER=admin
+  #     - HTTP_PASSWORD=admin
+  #   ports:
+  #     - 8082:8081
+  #   depends_on:
+  #     - "worker-redis"
+  #   networks:
+  #     - net-banco
+
+  # wrk-mongo:
+  #   image: mongo
+  #   restart: always
+  #   environment:
+  #     MONGO_INITDB_DATABASE: admin
+  #     MONGO_INITDB_ROOT_USERNAME: root
+  #     MONGO_INITDB_ROOT_PASSWORD: example
+  #   networks:
+  #     - net-banco
+  #   ports:
+  #     - 27017:27017
+  #   volumes:
+  #     - ./mongodb/data:/data/db
+
+  # wrk-mongo-express:
+  #   image: mongo-express
+  #   restart: always
+  #   ports:
+  #     - 8081:8081
+  #   environment:
+  #     ME_CONFIG_MONGODB_ADMINUSERNAME: root
+  #     ME_CONFIG_MONGODB_ADMINPASSWORD: example
+  #     ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+  #   networks:
+  #     - net-banco
+    # depends_on:
+    #   - "worker-mongo"
