@@ -43,7 +43,7 @@ func main() {
 	}
 	defer ch.Close()
 
-	messages, err := ch.Consume(os.Getenv("RABBIT_MQ_QUEUE"), "", true, false, false, false, nil)
+	messages, err := ch.Consume(os.Getenv("RABBIT_MQ_QUEUE"), "", false, false, false, false, nil)
 	if err != nil {
 		log.Println("ch.Consume", err)
 	}
@@ -71,6 +71,8 @@ func main() {
 					log.Println("Unable to connext to server")
 				}
 			}
+
+			message.Ack(true)
 
 		}
 	}()

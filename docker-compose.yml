@@ -28,41 +28,41 @@ services:
       - net-banco
       - net-broker
 
-  wrk-api-02:
-    hostname: wrk-api-02
-    container_name: wrk-api-02
-    build: api
-    restart: always
-    # ports:
-    #   - "3001:80"
-    depends_on:
-      - "wrk-redis"
-      - "wrk-rabbitmq"
-    links:
-      - "wrk-redis"
-      - "wrk-rabbitmq"
-    networks:
-      - net-api
-      - net-banco
-      - net-broker
+  # wrk-api-02:
+  #   hostname: wrk-api-02
+  #   container_name: wrk-api-02
+  #   build: api
+  #   restart: always
+  #   # ports:
+  #   #   - "3001:80"
+  #   depends_on:
+  #     - "wrk-redis"
+  #     - "wrk-rabbitmq"
+  #   links:
+  #     - "wrk-redis"
+  #     - "wrk-rabbitmq"
+  #   networks:
+  #     - net-api
+  #     - net-banco
+  #     - net-broker
 
-  wrk-api-03:
-    hostname: wrk-api-03
-    container_name: wrk-api-03
-    build: api
-    restart: always
-    # ports:
-    #   - "3002:80"
-    depends_on:
-      - "wrk-redis"
-      - "wrk-rabbitmq"
-    links:
-      - "wrk-redis"
-      - "wrk-rabbitmq"
-    networks:
-      - net-api
-      - net-banco
-      - net-broker
+  # wrk-api-03:
+  #   hostname: wrk-api-03
+  #   container_name: wrk-api-03
+  #   build: api
+  #   restart: always
+  #   # ports:
+  #   #   - "3002:80"
+  #   depends_on:
+  #     - "wrk-redis"
+  #     - "wrk-rabbitmq"
+  #   links:
+  #     - "wrk-redis"
+  #     - "wrk-rabbitmq"
+  #   networks:
+  #     - net-api
+  #     - net-banco
+  #     - net-broker
 
   wrk-consumer:
     container_name: wrk-consumer
@@ -120,6 +120,7 @@ services:
       - net-broker
     volumes:
       - ./rabbitmq/data/:/var/lib/rabbitmq/
+      - ./rabbitmq/log/:/var/log/rabbitmq/
     labels:
       NAME: "rabbitmq1"
 

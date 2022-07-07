@@ -37,10 +37,6 @@ func init() {
 }
 
 func main() {
-	// err := godotenv.Load()
-	// if err != nil {
-	// 	log.Fatal("Error loading .env file")
-	// }
 	app := route.NewRoutes()
 	log.Fatal(app.Listen(os.Getenv("API_PORT")))
 }

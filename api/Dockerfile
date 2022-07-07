@@ -3,10 +3,13 @@ FROM golang:alpine AS builder
 RUN mkdir /build
 ADD . /build/
 WORKDIR /build
+RUN go clean --modcache
 RUN go build -o main .
 
 # Run stage
 FROM alpine
+ENV TZ=America/Sao_Paulo
+#RUN apk --no-cache add tzdata
 RUN adduser -S -D -H -h /app appuser
 USER appuser
 COPY . /app

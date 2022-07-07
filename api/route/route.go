@@ -1,9 +1,11 @@
 package route
 
 import (
+	"os"
 	"time"
 
 	"github.com/ChrisMarSilva/cms-url-shortener/handlers"
+	"github.com/ChrisMarSilva/cms-url-shortener/helpers"
 	"github.com/ChrisMarSilva/cms-url-shortener/repositories"
 	"github.com/ChrisMarSilva/cms-url-shortener/services"
 	"github.com/aschenmaker/fiber-opentracing/fjaeger"
@@ -41,17 +43,20 @@ func NewRoutes() *fiber.App {
 	// log.Println("SamplingServerURL", cfg.Sampler.SamplingServerURL)
 	// log.Println("Getenv", os.Getenv("JAEGER_SAMPLING_ENDPOINT"))
 
+	rabbitmq := helpers.NewRabbitMQ(os.Getenv("RABBIT_MQ_ADDR"))
+
 	resolveRepo := repositories.NewResolveRepository()
 	resolveServ := services.NewResolveService(*resolveRepo)
 	resolveHandler := handlers.NewResolveHandler(*resolveServ)
 	app.Get("/:url", timeout.New(resolveHandler.ResolveURL, 10*time.Second)) // resolveHandler.ResolveURL // timeout.New(resolveHandler.ResolveURL, 10*time.Second)
 
 	shortenRepo := repositories.NewShortenRepository()
-	shortenServ := services.NewShortenService(*shortenRepo)
+	shortenServ := services.NewShortenService(*shortenRepo, rabbitmq)
 	shortenHandler := handlers.NewShortenHandler(*shortenServ)
 	app.Post("/api/v1", shortenHandler.ShortenURL) // shortenHandler.ShortenURL // timeout.New(shortenHandler.ShortenURL, 10*time.Second)
 
-	defaultHandler := handlers.NewDefaultHandler()
+	defaultServ := services.NewDefaultService()
+	defaultHandler := handlers.NewDefaultHandler(*defaultServ)
 	app.Use(defaultHandler.NotFound)
 
 	return app
